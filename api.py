@@ -8,7 +8,7 @@ load_dotenv()
 DIFY_API_KEY = os.getenv("DIFY_API_KEY")
 DIFY_API_URL = os.getenv("DIFY_API_URL")
 
-def call_job_copilot_api(resume_text: str, jd_text: str):
+def call_job_copilot_api(resume_text: str, jd_text: str, red_lines: list = None):
     """
     流式（Streaming）请求网关，保持管道持续活跃，彻底解决网关及操作系统超时断开问题
     """
@@ -26,9 +26,10 @@ def call_job_copilot_api(resume_text: str, jd_text: str):
     data = {
         "inputs": {
             "resume_text": resume_text, 
-            "jd_text": jd_text  
+            "jd_text": jd_text,
+            "red_lines": "、".join(red_lines) if red_lines else "无" 
         },
-        "response_mode": "streaming",  # 🚨 核心修复：由 blocking 改为 streaming，彻底激活流式长连接
+        "response_mode": "streaming",
         "user": "job_copilot_shared_user"
     }
     
